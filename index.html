@@ -3,30 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera Test</title>
+    <title>Camera Access with Human Detection</title>
     <style>
-        video {
+        video, canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            object-fit: cover;
         }
     </style>
 </head>
 <body>
+    <h1 style="position: absolute; z-index: 10; color: white;">Human Detection Web App</h1>
     <video id="camera" autoplay playsinline></video>
+    <canvas id="output"></canvas>
+
+    <!-- TensorFlow.js and CocoSSD -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
     <script>
         const video = document.getElementById('camera');
+        const canvas = document.getElementById('output');
+        const ctx = canvas.getContext('2d');
         
+        // Load the model
+        let model;
+        cocoSsd.load().then(loadedModel => {
+            model = loadedModel;
+            console.log("Model loaded successfully.");
+            detectFrame();
+        });
+
         // Access the camera
         navigator.mediaDevices.getUserMedia({
             video: {
-                facingMode: "user" // Change to "environment" for back camera
+                facingMode: "user" // Change to "environment" for rear camera
             }
         }).then(stream => {
             video.srcObject = stream;
         }).catch(err => {
             console.error("Error accessing camera: ", err);
         });
+
+        // Function to detect objects in the video frame
+        function detectFrame() {
+            if (model) {
+                model.detect(video).then(predictions => {
+                    drawPredictions(predictions);
+                    requestAnimationFrame(detectFrame);
+                });
+            }
+        }
+
+        // Draw the detection boxes on the canvas
+        function drawPredictions(predictions) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            predictions.forEach(prediction => {
+                if (prediction.class === "person") {
+                    // Draw bounding box
+                    ctx.beginPath();
+                    ctx.rect(...prediction.bbox);
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = 'green';
+                    ctx.stroke();
+
+                    // Draw label
+                    ctx.fillStyle = 'green';
+                    ctx.fillText(
+                        `${prediction.class} - ${Math.round(prediction.score * 100)}%`,
+                        prediction.bbox[0],
+                        prediction.bbox[1] > 10 ? prediction.bbox[1] - 5 : 10
+                    );
+                }
+            });
+        }
     </script>
 </body>
 </html>
+
