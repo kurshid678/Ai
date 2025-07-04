@@ -44,31 +44,44 @@
 /* Custom styles for the certificate generator */
 .draggable-input {
   transition: all 0.2s ease;
+  user-select: none;
 }
 
 .draggable-input:hover {
-  border-color: #3b82f6;
+  border-color: #3b82f6 !important;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.draggable-input.selected {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 .canvas-container {
   position: relative;
   overflow: hidden;
+  background-color: #ffffff;
 }
 
 .text-input-overlay {
   position: absolute;
-  border: 2px solid #3b82f6;
-  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #9ca3af;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 4px;
-  padding: 4px;
   cursor: move;
   user-select: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .text-input-overlay:hover {
-  border-color: #1d4ed8;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.text-input-overlay.selected {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 .certificate-preview {
@@ -102,10 +115,86 @@
   }
 }
 
+/* Enhanced drag and drop styles */
+.react-draggable {
+  transition: none !important;
+}
+
+.react-draggable-dragging {
+  transition: none !important;
+  z-index: 1000;
+}
+
+/* Range slider styles */
+input[type="range"] {
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #e5e7eb;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: #2563eb;
+  transform: scale(1.1);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  background: #2563eb;
+  transform: scale(1.1);
+}
+
+/* Color picker styles */
+input[type="color"] {
+  appearance: none;
+  width: 100%;
+  height: 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
+input[type="color"]::-moz-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .certificate-preview {
     transform: scale(0.3);
+  }
+  
+  .canvas-container {
+    transform: scale(0.8);
+    transform-origin: top left;
   }
 }
 
@@ -113,4 +202,26 @@
   .certificate-preview {
     transform: scale(0.25);
   }
+  
+  .canvas-container {
+    transform: scale(0.6);
+    transform-origin: top left;
+  }
+}
+
+/* Button focus styles */
+button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Input focus styles */
+input:focus, select:focus {
+  outline: none;
+  ring: 2px solid #3b82f6;
+}
+
+/* Prevent text selection on draggable elements */
+.react-draggable * {
+  user-select: none;
 }
