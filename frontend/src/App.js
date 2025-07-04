@@ -94,8 +94,10 @@ const CreateTemplate = () => {
       fontFamily: "Arial",
       color: "#000000"
     };
+    console.log("Adding text input:", newInput);
     setInputs([...inputs, newInput]);
     setSelectedInput(newInput.id);
+    console.log("Total inputs now:", inputs.length + 1);
   };
 
   const updateInputPosition = (id, x, y) => {
