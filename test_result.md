@@ -107,27 +107,33 @@ user_problem_statement: "Certificate generating app where user home page contain
 backend:
   - task: "Template CRUD operations"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
       - agent: "main"
       - comment: "Implemented Template model with create, read, delete endpoints. Certificate generation endpoint returns template data for PDF generation on frontend."
+      - working: true
+      - agent: "testing"
+      - comment: "All Template CRUD operations tested successfully. Create, read, update, and delete endpoints are working as expected. Error handling for non-existent templates returns appropriate 404 responses."
 
   - task: "Database schema for templates"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
       - agent: "main"
       - comment: "Created Template model with TextInput nested model. Supports custom canvas sizes, background images as base64, and positioned text inputs."
+      - working: true
+      - agent: "testing"
+      - comment: "Database schema for templates is working correctly. The Template model with nested TextInput model is properly storing and retrieving data from MongoDB. All fields including custom canvas sizes, background images (base64), and positioned text inputs are working as expected."
 
 frontend:
   - task: "Home page with navigation"
