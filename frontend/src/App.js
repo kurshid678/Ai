@@ -68,7 +68,7 @@ const CreateTemplate = () => {
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
   const [backgroundImage, setBackgroundImage] = useState("");
   const [inputs, setInputs] = useState([]);
-  const [draggedInput, setDraggedInput] = useState(null);
+  const [selectedInput, setSelectedInput] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
   const handleBackgroundUpload = (e) => {
@@ -95,6 +95,7 @@ const CreateTemplate = () => {
       color: "#000000"
     };
     setInputs([...inputs, newInput]);
+    setSelectedInput(newInput.id);
   };
 
   const updateInputPosition = (id, x, y) => {
@@ -111,6 +112,19 @@ const CreateTemplate = () => {
 
   const deleteInput = (id) => {
     setInputs(inputs.filter(input => input.id !== id));
+    if (selectedInput === id) {
+      setSelectedInput(null);
+    }
+  };
+
+  const handleInputClick = (id) => {
+    setSelectedInput(id);
+  };
+
+  const handleCanvasClick = (e) => {
+    if (e.target.id === 'canvas-container') {
+      setSelectedInput(null);
+    }
   };
 
   const saveTemplate = async () => {
