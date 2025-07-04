@@ -147,11 +147,14 @@ const CreateTemplate = () => {
       setTemplateName("");
       setInputs([]);
       setBackgroundImage("");
+      setSelectedInput(null);
     } catch (error) {
       console.error("Error saving template:", error);
       alert("Error saving template");
     }
   };
+
+  const selectedInputData = inputs.find(input => input.id === selectedInput);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -213,6 +216,96 @@ const CreateTemplate = () => {
                   Add Text Input
                 </button>
                 
+                {/* Selected Input Properties */}
+                {selectedInputData && (
+                  <div className="border-t pt-4">
+                    <h3 className="text-lg font-semibold mb-3">Input Properties</h3>
+                    
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Placeholder Text</label>
+                        <input
+                          type="text"
+                          value={selectedInputData.placeholder}
+                          onChange={(e) => updateInputProperties(selectedInput, { placeholder: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Font Size</label>
+                        <input
+                          type="range"
+                          min="10"
+                          max="72"
+                          value={selectedInputData.fontSize}
+                          onChange={(e) => updateInputProperties(selectedInput, { fontSize: parseInt(e.target.value) })}
+                          className="w-full"
+                        />
+                        <div className="text-center text-sm text-gray-600">{selectedInputData.fontSize}px</div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Font Family</label>
+                        <select
+                          value={selectedInputData.fontFamily}
+                          onChange={(e) => updateInputProperties(selectedInput, { fontFamily: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="Arial">Arial</option>
+                          <option value="Times New Roman">Times New Roman</option>
+                          <option value="Helvetica">Helvetica</option>
+                          <option value="Courier New">Courier New</option>
+                          <option value="Verdana">Verdana</option>
+                        </select>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Text Color</label>
+                        <input
+                          type="color"
+                          value={selectedInputData.color}
+                          onChange={(e) => updateInputProperties(selectedInput, { color: e.target.value })}
+                          className="w-full h-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Width</label>
+                        <input
+                          type="range"
+                          min="50"
+                          max="600"
+                          value={selectedInputData.width}
+                          onChange={(e) => updateInputProperties(selectedInput, { width: parseInt(e.target.value) })}
+                          className="w-full"
+                        />
+                        <div className="text-center text-sm text-gray-600">{selectedInputData.width}px</div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Height</label>
+                        <input
+                          type="range"
+                          min="20"
+                          max="200"
+                          value={selectedInputData.height}
+                          onChange={(e) => updateInputProperties(selectedInput, { height: parseInt(e.target.value) })}
+                          className="w-full"
+                        />
+                        <div className="text-center text-sm text-gray-600">{selectedInputData.height}px</div>
+                      </div>
+                      
+                      <button
+                        onClick={() => deleteInput(selectedInput)}
+                        className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors"
+                      >
+                        Delete Input
+                      </button>
+                    </div>
+                  </div>
+                )}
+                
                 <button
                   onClick={saveTemplate}
                   className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
@@ -233,52 +326,66 @@ const CreateTemplate = () => {
             <div className="lg:col-span-3">
               <div className="bg-white border-2 border-gray-200 rounded-lg p-4">
                 <h2 className="text-xl font-semibold mb-4">Canvas</h2>
-                <div
-                  className="relative border-2 border-dashed border-gray-300 mx-auto"
-                  style={{ 
-                    width: `${canvasSize.width}px`, 
-                    height: `${canvasSize.height}px`,
-                    backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                  }}
-                >
-                  {inputs.map((input) => (
-                    <Draggable
-                      key={input.id}
-                      position={{ x: input.x, y: input.y }}
-                      onStop={(e, data) => updateInputPosition(input.id, data.x, data.y)}
-                    >
-                      <div
-                        className="absolute cursor-move border-2 border-blue-500 bg-white bg-opacity-80 p-2 rounded group"
-                        style={{
-                          width: `${input.width}px`,
-                          height: `${input.height}px`,
-                          fontSize: `${input.fontSize}px`,
-                          fontFamily: input.fontFamily,
-                          color: input.color
-                        }}
+                <div className="flex justify-center">
+                  <div
+                    id="canvas-container"
+                    className="relative border-2 border-dashed border-gray-300 bg-white"
+                    style={{ 
+                      width: `${canvasSize.width}px`, 
+                      height: `${canvasSize.height}px`,
+                      backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center'
+                    }}
+                    onClick={handleCanvasClick}
+                  >
+                    {inputs.map((input) => (
+                      <Draggable
+                        key={input.id}
+                        position={{ x: input.x, y: input.y }}
+                        onStop={(e, data) => updateInputPosition(input.id, data.x, data.y)}
+                        bounds="parent"
                       >
-                        <input
-                          type="text"
-                          placeholder={input.placeholder}
-                          className="w-full h-full border-none outline-none bg-transparent text-center"
+                        <div
+                          className={`absolute cursor-move border-2 bg-white bg-opacity-90 rounded flex items-center justify-center ${
+                            selectedInput === input.id ? 'border-blue-500 shadow-lg' : 'border-gray-400'
+                          }`}
                           style={{
+                            width: `${input.width}px`,
+                            height: `${input.height}px`,
                             fontSize: `${input.fontSize}px`,
                             fontFamily: input.fontFamily,
                             color: input.color
                           }}
-                          onChange={(e) => updateInputProperties(input.id, { placeholder: e.target.value })}
-                        />
-                        <button
-                          onClick={() => deleteInput(input.id)}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleInputClick(input.id);
+                          }}
                         >
-                          ×
-                        </button>
-                      </div>
-                    </Draggable>
-                  ))}
+                          <div
+                            className="w-full h-full flex items-center justify-center text-center p-2"
+                            style={{
+                              fontSize: `${input.fontSize}px`,
+                              fontFamily: input.fontFamily,
+                              color: input.color
+                            }}
+                          >
+                            {input.placeholder}
+                          </div>
+                          {selectedInput === input.id && (
+                            <div className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs cursor-pointer hover:bg-red-600"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteInput(input.id);
+                              }}
+                            >
+                              ×
+                            </div>
+                          )}
+                        </div>
+                      </Draggable>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
