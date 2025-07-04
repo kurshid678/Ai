@@ -328,6 +328,9 @@ const CreateTemplate = () => {
             <div className="lg:col-span-3">
               <div className="bg-white border-2 border-gray-200 rounded-lg p-4">
                 <h2 className="text-xl font-semibold mb-4">Canvas</h2>
+                <div className="mb-2 text-sm text-gray-600">
+                  Total inputs: {inputs.length} | Selected: {selectedInput || 'None'}
+                </div>
                 <div className="flex justify-center">
                   <div
                     id="canvas-container"
@@ -341,56 +344,60 @@ const CreateTemplate = () => {
                     }}
                     onClick={handleCanvasClick}
                   >
-                    {inputs.map((input) => (
-                      <Draggable
-                        key={input.id}
-                        position={{ x: input.x, y: input.y }}
-                        onStop={(e, data) => updateInputPosition(input.id, data.x, data.y)}
-                        bounds="parent"
-                        disabled={false}
-                      >
-                        <div
-                          className={`absolute cursor-move border-2 bg-white bg-opacity-95 rounded flex items-center justify-center ${
-                            selectedInput === input.id ? 'border-blue-500 shadow-lg' : 'border-gray-400'
-                          }`}
-                          style={{
-                            width: `${input.width}px`,
-                            height: `${input.height}px`,
-                            fontSize: `${input.fontSize}px`,
-                            fontFamily: input.fontFamily,
-                            color: input.color,
-                            zIndex: selectedInput === input.id ? 1000 : 1
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleInputClick(input.id);
-                          }}
+                    {console.log("Rendering inputs:", inputs)}
+                    {inputs.map((input, index) => {
+                      console.log("Rendering input:", input, "at index:", index);
+                      return (
+                        <Draggable
+                          key={input.id}
+                          position={{ x: input.x, y: input.y }}
+                          onStop={(e, data) => updateInputPosition(input.id, data.x, data.y)}
+                          bounds="parent"
+                          disabled={false}
                         >
                           <div
-                            className="w-full h-full flex items-center justify-center text-center p-2 select-none"
+                            className={`absolute cursor-move border-2 bg-white bg-opacity-95 rounded flex items-center justify-center ${
+                              selectedInput === input.id ? 'border-blue-500 shadow-lg' : 'border-gray-400'
+                            }`}
                             style={{
+                              width: `${input.width}px`,
+                              height: `${input.height}px`,
                               fontSize: `${input.fontSize}px`,
                               fontFamily: input.fontFamily,
                               color: input.color,
-                              wordBreak: 'break-word',
-                              overflow: 'hidden'
+                              zIndex: selectedInput === input.id ? 1000 : 1
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleInputClick(input.id);
                             }}
                           >
-                            {input.placeholder}
-                          </div>
-                          {selectedInput === input.id && (
-                            <div className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs cursor-pointer hover:bg-red-600 z-10"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                deleteInput(input.id);
+                            <div
+                              className="w-full h-full flex items-center justify-center text-center p-2 select-none"
+                              style={{
+                                fontSize: `${input.fontSize}px`,
+                                fontFamily: input.fontFamily,
+                                color: input.color,
+                                wordBreak: 'break-word',
+                                overflow: 'hidden'
                               }}
                             >
-                              ×
+                              {input.placeholder}
                             </div>
-                          )}
-                        </div>
-                      </Draggable>
-                    ))}
+                            {selectedInput === input.id && (
+                              <div className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs cursor-pointer hover:bg-red-600 z-10"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteInput(input.id);
+                                }}
+                              >
+                                ×
+                              </div>
+                            )}
+                          </div>
+                        </Draggable>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
