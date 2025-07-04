@@ -205,3 +205,5 @@ test_plan:
 agent_communication:
   - agent: "main"
   - message: "Implemented complete certificate generator app with drag-and-drop template creation, PDF generation, and template management. Backend provides full CRUD operations for templates. Frontend uses modern React with Tailwind CSS for beautiful UI. Ready for backend testing."
+  - agent: "testing"
+  - message: "Completed backend testing for Template CRUD operations and Database schema. All backend API endpoints are working correctly. Created comprehensive test script in backend_test.py that verifies template creation, retrieval, certificate generation, and deletion. All tests passed successfully."
