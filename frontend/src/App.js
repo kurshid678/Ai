@@ -85,19 +85,21 @@ const CreateTemplate = () => {
   const addTextInput = () => {
     const newInput = {
       id: Date.now().toString(),
-      x: 50,
-      y: 50,
+      x: 50 + (inputs.length * 20), // Offset each new input slightly
+      y: 50 + (inputs.length * 20),
       width: 200,
       height: 40,
-      placeholder: "Enter text",
+      placeholder: `Text Input ${inputs.length + 1}`,
       fontSize: 16,
       fontFamily: "Arial",
       color: "#000000"
     };
     console.log("Adding text input:", newInput);
-    setInputs([...inputs, newInput]);
+    console.log("Current inputs before:", inputs);
+    const newInputs = [...inputs, newInput];
+    setInputs(newInputs);
     setSelectedInput(newInput.id);
-    console.log("Total inputs now:", inputs.length + 1);
+    console.log("New inputs array:", newInputs);
   };
 
   const updateInputPosition = (id, x, y) => {
