@@ -102,7 +102,13 @@ const CreateTemplate = () => {
     console.log("New inputs array:", newInputs);
   };
 
+  const handleDrag = (id, e, data) => {
+    console.log("Dragging input:", id, "to position:", data.x, data.y);
+    updateInputPosition(id, data.x, data.y);
+  };
+
   const updateInputPosition = (id, x, y) => {
+    console.log("Updating position for input:", id, "to:", x, y);
     setInputs(inputs.map(input => 
       input.id === id ? { ...input, x, y } : input
     ));
