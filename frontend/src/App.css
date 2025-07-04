@@ -122,7 +122,20 @@
 
 .react-draggable-dragging {
   transition: none !important;
-  z-index: 1000;
+  z-index: 1000 !important;
+  transform: none !important;
+}
+
+.drag-handle {
+  cursor: move !important;
+}
+
+.drag-handle:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.react-draggable-dragging .drag-handle {
+  background-color: rgba(59, 130, 246, 0.2);
 }
 
 /* Range slider styles */
